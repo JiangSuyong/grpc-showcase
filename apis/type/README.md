@@ -1,5 +1,6 @@
-# proto 文件
+# Common Proto Types
 
-包含在不同 API 之间、同一 API 的不同版本之间或 API 与服务实现之间共享的类型。
+Proto files containing types that are shared between different APIs,
+different versions of the same API, or between the API and service implementation.
+Type definitions under type/* should not have breaking changes once they are released.
 
-type/* 下的类型定义一旦发布就不应该有重大更改。

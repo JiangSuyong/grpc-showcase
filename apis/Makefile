@@ -1,9 +1,7 @@
 # 构建文件
 
 srcDir = $(shell pwd)
-outDir = $(shell pwd)/..
-port = 80
-app = grpc
+outDir = $(shell pwd)
 
 protobuf:
 	docker run --rm \

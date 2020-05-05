@@ -1,1 +1,3 @@
-# 技术文档文件
+# Documentations
+ 
+The technical documentation files. They should be in Markdown format.

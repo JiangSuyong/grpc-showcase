@@ -1,3 +1,3 @@
-# 子 API 的接口定义
+# Sub api services
 
-每个子 API 可以有自己的独立主要版本。
+Each {subapi} directory contains interface definition of a sub-API. Each sub-API may have its own independent major version.

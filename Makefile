@@ -1,10 +1,9 @@
-srcDir = $(shell pwd)/helloworld
 outDir = $(shell pwd)
 port = 80
 app = grpc
 
 protobuf:
-	cd apis && $(MAKE) protobuf
+	cd apis && $(MAKE) protobuf outDir=$(outDir)
 
 transcoder: protobuf
 	docker run --rm \
