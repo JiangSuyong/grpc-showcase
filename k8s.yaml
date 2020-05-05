@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc
+spec:
+  selector:
+    app: grpc
+  ports:
+  - port: 80
+    name: grpc-svc
+    protocol: TCP
+    targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc
+spec:
+  selector:
+    matchLabels:
+      app: grpc
+  template:
+    metadata:
+      labels:
+        app: grpc
+    spec:
+      containers:
+      - name: grpc
+        image: longkai/grpc:v1.0.0
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          exec:
+            command: ["grpc-health-probe", "-addr=:80"]
+          initialDelaySeconds: 1
+        livenessProbe:
+          exec:
+            command: ["grpc-health-probe", "-addr=:80"]
+          initialDelaySeconds: 2
+
