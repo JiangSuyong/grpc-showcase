@@ -12,7 +12,7 @@ This is a gRPC best practise repo, which contains:
 - cutting edge technology
 - automation all the workflows
 
-# Up and Running
+## Up and Running
 
 You must have a working Kubernetes and Istio environment and config its ingress, simply run,
 
@@ -36,6 +36,12 @@ $ curl -d '{"name": "World"}' "localhost/v1/say" # replace with your server addr
  "message": "Hello World"
 }
 ```
+
+## TODO
+- [ ] sending arbitrary http request body in addition to JSON
+- [ ] replying arbitrary http response body in addition to JSON
+- [ ] rich google error status
+- [ ] custom error
 
 If you have any questions or contributions feel free to file an issue.
 
