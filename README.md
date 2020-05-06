@@ -42,6 +42,9 @@ $ curl -d '{"name": "World"}' "localhost/v1/say" # replace with your server addr
 - [ ] replying arbitrary http response body in addition to JSON
 - [ ] rich google error status
 - [ ] custom error
+- [ ] request params validation
+- [ ] testing
+- [ ] other gRPC features, like api listing, interceptor, etc.
 
 If you have any questions or contributions feel free to file an issue.
 

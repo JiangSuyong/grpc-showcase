@@ -1,4 +1,4 @@
-module github.com/longkai/protobuf
+module github.com/longkai/grpc-showcase
 
 go 1.14
 

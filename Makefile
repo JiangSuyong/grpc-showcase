@@ -20,7 +20,7 @@ build: protobuf
 	GOOS=linux GOARCH=amd64 go build -o serv ./cmd/serv
 
 container: protobuf
-	docker build -t longkai/grpc:v1.0.0 .
+	docker build -t longkai/grpc-showcase:v1.0.0 .
 
 deploy: container transcoder
 	kubectl apply -f k8s.yaml

@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"flag"
-	pb "github.com/longkai/protobuf/genproto/apis/v1"
+	grpc_showcase "github.com/longkai/grpc-showcase"
+	pb "github.com/longkai/grpc-showcase/genproto/apis/v1"
+	pbLibrary "github.com/longkai/grpc-showcase/genproto/apis/library/v1"
 	"google.golang.org/genproto/googleapis/api/httpbody"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -20,6 +22,7 @@ type server struct {
 }
 
 func unaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	log.Printf("%+v", req)
 	// authentication (token verification)
 	m, err := handler(ctx, req)
 	if err != nil {
@@ -64,6 +67,7 @@ func main() {
 	s := grpc.NewServer(grpc.UnaryInterceptor(unaryInterceptor))
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 	pb.RegisterGreeterServer(s, &server{})
+	pbLibrary.RegisterLibraryServer(s, &grpc_showcase.LibraryServer{})
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

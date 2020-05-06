@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	pb "github.com/longkai/protobuf/genproto/apis/v1"
+	pb "github.com/longkai/grpc-showcase/genproto/apis/v1"
 	"google.golang.org/grpc"
 )
 
