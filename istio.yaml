@@ -23,17 +23,8 @@ spec:
   hosts:
   - "*"
   http:
-#  - name: http-server
-#    match:
-#    - uri:
-#        prefix: /v1/http-endpoints
-#    route:
-#    - destination:
-#        host: grpc.default.svc.cluster.local
-#        port:
-#          number: 8080 # http port
   - route:
     - destination:
-        host: grpc.default.svc.cluster.local
+        host: grpc # same namespace, full dns name is encouraged
         port:
           number: 80 # grpc port

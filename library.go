@@ -2,10 +2,10 @@ package grpc_showcase
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes/empty"
-	"log"
 
+	"github.com/golang/protobuf/ptypes/empty"
 	pb "github.com/longkai/grpc-showcase/genproto/apis/library/v1"
+	"k8s.io/klog/v2"
 )
 
 type LibraryServer struct {
@@ -25,11 +25,11 @@ func (l *LibraryServer) GetShelf(ctx context.Context, req *pb.GetShelfRequest) (
 
 func (l *LibraryServer) ListShelves(ctx context.Context, req *pb.ListShelvesRequest) (*pb.ListShelvesResponse, error) {
 	li := []*pb.Shelf{
-		&pb.Shelf{
+		{
 			Name:  "computation science",
 			Theme: "theme computation science",
 		},
-		&pb.Shelf{
+		{
 			Name:  "love feelings",
 			Theme: "theme love feelings",
 		},
@@ -66,14 +66,14 @@ func (l *LibraryServer) GetBook(ctx context.Context, req *pb.GetBookRequest) (*p
 
 func (l *LibraryServer) ListBooks(ctx context.Context, req *pb.ListBooksRequest) (*pb.ListBooksResponse, error) {
 	return &pb.ListBooksResponse{
-		Books:         []*pb.Book{
-			&pb.Book{
+		Books: []*pb.Book{
+			{
 				Name:   "shelves/cs/books/ddia",
 				Author: "Martin Kleppmann",
 				Title:  "Designing Data-Intensive Applications",
 				Read:   true,
 			},
-			&pb.Book{
+			{
 				Name:   "shelves/cs/books/tcpip",
 				Author: "W. Richard Stevens",
 				Title:  "TCP/IP Illustrated, Vol. 1: The Protocols",
@@ -90,7 +90,7 @@ func (l *LibraryServer) DeleteBook(ctx context.Context, req *pb.DeleteBookReques
 
 func (l *LibraryServer) UpdateBook(ctx context.Context, req *pb.UpdateBookRequest) (*pb.Book, error) {
 	// TODO: patch it
-	log.Printf("UpdateBook: %+v", req)
+	klog.InfoS("Update Book", "request", req)
 	return req.Book, nil
 }
 

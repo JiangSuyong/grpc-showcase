@@ -8,7 +8,7 @@ protobuf:
 transcoder: protobuf
 	docker run --rm \
 		-v $(outDir)/api_descriptor.pb:/out/api_descriptor.pb \
-		longkai/dockerfiles:grpc-toolkit-3.11.4 \
+		longkai/dockerfiles:grpc-toolkit \
 		grpc-transcoder \
 			--port $(port) \
 			--service $(app) \

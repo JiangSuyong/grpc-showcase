@@ -7,7 +7,7 @@ protobuf:
 	docker run --rm \
 		-v $(srcDir):/protos \
 		-v $(outDir):/out \
-		longkai/dockerfiles:grpc-toolkit-3.11.4 \
+		longkai/dockerfiles:grpc-toolkit \
 		sh -c '\
 		protoc \
 		-I/protos \

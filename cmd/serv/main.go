@@ -3,9 +3,12 @@ package main
 import (
 	"context"
 	"flag"
+	"net"
+	"os"
+
 	grpc_showcase "github.com/longkai/grpc-showcase"
-	pb "github.com/longkai/grpc-showcase/genproto/apis/v1"
 	pbLibrary "github.com/longkai/grpc-showcase/genproto/apis/library/v1"
+	pb "github.com/longkai/grpc-showcase/genproto/apis/v1"
 	"google.golang.org/genproto/googleapis/api/httpbody"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -13,8 +16,7 @@ import (
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"log"
-	"net"
+	"k8s.io/klog/v2"
 )
 
 type server struct {
@@ -22,29 +24,31 @@ type server struct {
 }
 
 func unaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-	log.Printf("%+v", req)
+	if info.FullMethod != "/grpc.health.v1.Health/Check" {
+		klog.InfoS("Intercept gRPC", "request", req, "info", info, "handler", handler)
+	}
 	// authentication (token verification)
 	m, err := handler(ctx, req)
 	if err != nil {
-		log.Printf("RPC failed with error %v", err)
+		klog.InfoS("Failed handle gRPC", "err", err)
 	}
 	return m, err
 }
 
 // SayHello implements helloworld.GreeterServer
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
-	log.Printf("Received: %v, age: %d", in.GetName(), in.GetAge())
+	klog.InfoS("SayHello", "age", in.Age, "name", in.Name)
 	md, ok := metadata.FromIncomingContext(ctx)
-	log.Println(md, ok)
+	klog.InfoS("SayHello", "metadata", md, "OK", ok)
 	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
 
 // CreateXml _
-func (s *server) CreateXml(ctx context.Context, in *pb.XmlRequest) (*httpbody.HttpBody, error) {
+func (s *server) CreateXML(ctx context.Context, in *pb.XmlRequest) (*httpbody.HttpBody, error) {
 	if true {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
-	log.Printf("x-req-id %s, ct %s, body: %s", in.GetRequestId(), in.HttpBody.ContentType, in.HttpBody.Data)
+	klog.InfoS("CreateXML", "x-req-id", in.GetRequestId(), "content-type", in.HttpBody.ContentType, "body", string(in.HttpBody.Data))
 	res := httpbody.HttpBody{
 		ContentType: "application/xml; charset=utf-8",
 		Data: []byte(`<xml>
@@ -58,17 +62,21 @@ func (s *server) CreateXml(ctx context.Context, in *pb.XmlRequest) (*httpbody.Ht
 var addr = flag.String("addr", "0.0.0.0:80", "server port")
 
 func main() {
+	klog.InitFlags(nil)
+	defer klog.Flush()
 	flag.Parse()
 
 	lis, err := net.Listen("tcp", *addr)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		klog.ErrorS(err, "Failed listen tcp")
+		os.Exit(1)
 	}
 	s := grpc.NewServer(grpc.UnaryInterceptor(unaryInterceptor))
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 	pb.RegisterGreeterServer(s, &server{})
 	pbLibrary.RegisterLibraryServer(s, &grpc_showcase.LibraryServer{})
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		klog.ErrorS(err, "Failed serve gRPC")
+		os.Exit(1)
 	}
 }

@@ -1,4 +1,4 @@
-FROM golang:1.14-buster as build
+FROM golang:1.15-buster as build
 ENV GOPROXY=https://goproxy.cn
 WORKDIR /opt
 ADD . .
